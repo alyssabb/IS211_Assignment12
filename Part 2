@@ -1,0 +1,41 @@
+from flask import Flask, request, redirect, render_template
+
+app = Flask(__name__)
+
+# Set a global variable to store the logged in status of the user
+logged_in = False
+
+# Helper function to check if the user is logged in
+def check_logged_in():
+    if not logged_in:
+        return redirect("/login")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    global logged_in
+    if request.method == "POST":
+        # Get the username and password from the form
+        username = request.form["username"]
+        password = request.form["password"]
+
+        # Check if the credentials are correct
+        if username == "admin" and password == "password":
+            logged_in = True
+            return redirect("/dashboard")
+        else:
+            # Redirect back to the login page with an error message
+            return redirect("/login?error=invalid_credentials")
+    else:
+        # Render the login form
+        return render_template("login.html")
+
+@app.route("/dashboard")
+def dashboard():
+    # Check if the user is logged in
+    check_logged_in()
+
+    # Render the dashboard template
+    return render_template("dashboard.html")
+
+if __name__ == "__main__":
+    app.run()

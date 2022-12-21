@@ -1,0 +1,19 @@
+@app.route('/student/<int:student_id>')
+def student_results(student_id):
+    student = get_student(student_id)
+    if student is None:
+        # Return a 404 error if the student with the given ID does not exist
+        return '404 Not Found', 404
+    results = get_results_for_student(student_id)
+    if not results:
+        return 'No Results'
+    else:
+        # Create an HTML table to display the quiz results
+        table = '<table>'
+        table += '<tr><th>Quiz ID</th><th>Score</th></tr>'
+        for result in results:
+            table += f'<tr><td>{result["quiz_id"]}</td><td>{result["score"]}</td></tr>'
+        table += '</table>'
+        return table
+
+<a href="/student/{{ student.id }}">{{ student.name }}</a>

@@ -1,0 +1,28 @@
+app.post('/student/add', function(req, res) {
+  // Get the form data from the request body
+  const name = req.body.name;
+  const email = req.body.email;
+
+  // Attempt to add the student to the database
+  try {
+    const result = addStudentToDatabase(name, email);
+    if (result) {
+      // Redirect back to the dashboard on success
+      res.redirect('/dashboard');
+    } else {
+      // Return the form with an error message on failure
+      res.send(`
+        <h1>Error adding student</h1>
+        <p>There was an error adding the student to the database. Please try again.</p>
+        ${formHtml}
+      `);
+    }
+  } catch (error) {
+    // Return the form with an error message on failure
+    res.send(`
+      <h1>Error adding student</h1>
+      <p>There was an error adding the student to the database. Please try again.</p>
+      ${formHtml}
+    `);
+  }
+});

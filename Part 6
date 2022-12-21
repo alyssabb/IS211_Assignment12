@@ -1,0 +1,54 @@
+@app.route('/results/add', methods=['GET', 'POST'])
+def add_result():
+    # Get list of students and quizzes
+    students = Student.query.all()
+    quizzes = Quiz.query.all()
+
+    # If the form has been submitted
+    if request.method == 'POST':
+        # Get the selected student and quiz
+        student_id = request.form['student']
+        quiz_id = request.form['quiz']
+
+        # Get the student and quiz objects from their IDs
+        student = Student.query.get(student_id)
+        quiz = Quiz.query.get(quiz_id)
+
+        # Get the entered grade
+        grade = request.form['grade']
+
+        # Validate the entered grade
+        if not grade:
+            # Grade is required
+            error = 'Grade is required'
+        elif not grade.isdigit():
+            # Grade must be a number
+            error = 'Grade must be a number'
+        else:
+            # Create a new Result object and add it to the database
+            result = Result(student=student, quiz=quiz, grade=grade)
+            db.session.add(result)
+            db.session.commit()
+
+            # Redirect to the dashboard
+            return redirect(url_for('dashboard'))
+
+    return render_template('add_result.html', students=students, quizzes=quizzes, error=error)
+--------------------------------------------------
+<h1>Add Quiz Result</h1>
+
+{% if error %}
+<p style="color:red">{{ error }}</p>
+{% endif %}
+
+<form method="post">
+    <label for="student">Student:</label>
+    <select id="student" name="student">
+        {% for student in students %}
+        <option value="{{ student.id }}">{{ student.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="quiz">Quiz:</label>
+    <select id="quiz" name="quiz">
+        {% for quiz

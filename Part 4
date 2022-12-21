@@ -1,0 +1,7 @@
+<form action="/quiz/add" method="post">
+  <label for="quiz-name">Quiz Name:</label><br>
+  <input type="text" id="quiz-name" name="quiz-name"><br>
+  <label for="quiz-date">Quiz Date:</label><br>
+  <input type="date" id="quiz-date" name="quiz-date"><br>
+  <input type="submit" value="Submit">
+</form>
